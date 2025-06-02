@@ -1,0 +1,36 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #343a40;
+  color: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.sidebar .nav-link {
+  color: #f0e9e9;
+  padding: 10px 15px;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #007bff;
+}
+
+.sidebar .nav-link.active {
+  background-color: #093564;
+}
+
+.main-content {
+  margin-left: 250px;
+  padding: 20px;
+}
+
+.navbar {
+  margin-bottom: 20px;
+  background-color: #145391;
+}
