@@ -23,7 +23,7 @@ class UserController extends Controller
         $discountedChalets = Chalet::with(['images', 'reviews'])  // for discount in home page
             ->withAvg('reviews', 'rate')
             ->where('discount', '>', 0)
-            ->inRandomOrder()
+            ->orderByDesc('reviews_avg_rate')
             ->limit(3)
             ->get();
     

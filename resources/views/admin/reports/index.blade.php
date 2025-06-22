@@ -1,73 +1,104 @@
 @extends('layouts.admin')
 
 @section('content')
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<body>
-    <div class="container">
-        <h1>Reports</h1>
+<div class="container-fluid"> {{-- Use container-fluid for consistent admin panel layout --}}
 
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Total Users</h5>
-                    </div>
-                    <div class="card-body">
-                        <p>Total Users: {{ $totalUsers }}</p>
-                        <p>Total Lessors: {{ $totalLessors }}</p>
-                        <p>Total Renters: {{ $totalRenters }}</p>
-                    </div>
-                </div>
-            </div>
+    {{-- Page Heading --}}
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Reports Overview</h1> {{-- Changed h1 class for consistency --}}
+    </div>
 
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Bookings</h5>
-                    </div>
-                    <div class="card-body">
-                        <p>Confirmed Bookings: {{ $confirmedBookings ?? 0 }}</p>
-                        <p>Rejected Bookings: {{ $rejectedBookings ?? 0 }}</p>
-                    </div>
-                </div>
-            </div>
+    {{-- Alert for any messages (e.g., if data is missing) --}}
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Top Booked Chalets</h5>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            @foreach ($topChalets as $chalet)
-                                <li class="list-group-item">
-                                    {{ $chalet->name }} - Total Bookings: {{ $chalet->total_bookings }}
-                                </li>
-                            @endforeach
-                        </ul>
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    <div class="row">
+        {{-- Total Users Card --}}
+        <div class="col-md-4 mb-4"> {{-- Added mb-4 for margin-bottom --}}
+            <div class="card shadow h-100 py-2"> {{-- Added shadow and h-100 for consistent card height --}}
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Total Users
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalUsers }}</div>
+                            <div class="mt-2 text-gray-600">
+                                <p class="mb-0">Lessors: {{ $totalLessors }}</p>
+                                <p class="mb-0">Renters: {{ $totalRenters }}</p>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- Uncomment the below section if you want to display total revenue --}}
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Total Revenue</h5>
-                    </div>
-                    <div class="card-body">
-                        <p>Total Revenue: {{ $totalRevenue ?? 'Not Available' }}</p>
+        {{-- Top Booked Chalets Card (Moved to occupy a full row since other cards are gone) --}}
+        <div class="col-md-8 mb-4"> {{-- Changed to col-md-8 to span more space --}}
+            <div class="card shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Top Booked Chalets
+                            </div>
+                            <div class="mt-2">
+                                @forelse ($topChalets as $chalet)
+                                    <p class="mb-1 text-gray-800">
+                                        <i class="fas fa-home me-1"></i> {{ $chalet->name }} ({{ $chalet->total_bookings }} Bookings)
+                                    </p>
+                                @empty
+                                    <p class="text-gray-600">No top chalets data available.</p>
+                                @endforelse
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-trophy fa-2x text-gray-300"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+    {{-- Total Revenue Card (Now on its own row) --}}
+    <div class="row mt-4">
+        <div class="col-xl-6 col-md-6 mb-4"> {{-- Adjusted column size for a larger card --}}
+            <div class="card shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Total Revenue
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                {{ number_format($totalRevenue ?? 0, 2) }} JOD
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- Removed the Chalet Status Overview card from here --}}
+        {{-- You can add another card here if you have more reports, e.g., Top Users by Bookings --}}
+    </div>
+
+</div>
 @endsection

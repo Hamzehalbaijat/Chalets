@@ -18,4 +18,5 @@ return $this->belongsTo(User::class);
 return $this->belongsTo(Chalet::class); 
 } 
 
+
 }

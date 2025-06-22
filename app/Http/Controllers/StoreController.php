@@ -11,6 +11,8 @@ use App\Models\Booking;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Review;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail; // Add this line
+use App\Mail\ContactFormMail;
 
 class StoreController extends Controller
 {
@@ -108,16 +110,24 @@ class StoreController extends Controller
         return view('user.contact');
     }
 
-    public function storeContact(Request $request)
+   public function storeContact(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'subject' => 'nullable|string|max:255',
             'message' => 'required|string',
         ]);
-        Contact::create($request->all());
-        return redirect()->back()->with('success', 'Your message has been sent successfully!');    }
+
+        // Store the contact message
+        Contact::create($validated);
+
+        // Send email
+        Mail::to('albaijathamzeh@gmail.com')->send(new ContactFormMail($validated));
+
+        return redirect()->back()->with('success', 'Your message has been sent successfully!');
+    }
+      
 }
 
 

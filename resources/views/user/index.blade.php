@@ -45,6 +45,32 @@
         font-weight: bold;
         text-transform: uppercase;
     }
+
+
+    .chat-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+    
+    .chat-btn:hover {
+        background: white;
+        transform: scale(1.1);
+    }
+    
+    .chat-btn i {
+        color: #28a745;
+        font-size: 18px;
+    }
 </style>
 <!-- Carousel Start -->
 <div class="container-fluid p-0 mb-5">
@@ -145,6 +171,11 @@
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div
                         class="room-item d-flex flex-column shadow rounded overflow-hidden position-relative {{ $chalet->status == 'not available' ? 'disabled-card' : '' }}">
+                        @if ($chalet->status=='available')
+                        <a href = "{{ route('chat.start', $chalet) }}" class="chat-btn" title ="Chat with Owner">
+                            <i class="fa fa-comments"></i>
+                        </a>
+                        @endif
                         <div class="position-relative">
                             <img class="img-fluid fixed-img-size"
                                 src="{{ asset($chalet->images->first()->image ?? 'img/default.jpg') }}"
@@ -206,6 +237,8 @@
                                     href="{{ route('showChalet', $chalet) }}">
                                     View Details & Booking
                                 </a>
+                               
+
                             </div>
                         </div>
                         @if ($chalet->status == 'not available')

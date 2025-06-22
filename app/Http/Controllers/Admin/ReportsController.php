@@ -22,6 +22,8 @@ class ReportsController extends Controller
         $totalLessors = User::where('role', 'owner')->count();
         $totalRenters = User::where('role', 'user')->count();
 
+           $totalRevenue = Booking::sum('total_price');
+
         $topChalets = Booking::select('chalets.name', DB::raw('COUNT(bookings.id) as total_bookings'))
             ->join('chalets', 'bookings.chalet_id', '=', 'chalets.id')
             ->groupBy('chalets.name')
@@ -29,6 +31,6 @@ class ReportsController extends Controller
             ->limit(5)
             ->get();
 
-        return view('admin.reports.index', compact('totalUsers', 'totalLessors', 'totalRenters', 'topChalets'));
+        return view('admin.reports.index', compact('totalUsers', 'totalLessors', 'totalRenters',  'totalRevenue','topChalets'));
     }
 }

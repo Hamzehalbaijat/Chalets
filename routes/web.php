@@ -14,7 +14,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\ReportsController as AdminReportsController;
-
+use App\Http\Controllers\ChatController;
 
 use App\Http\Controllers\ChaletController;
 
@@ -99,7 +99,23 @@ Route::get('/chalets', function () {
 // });
 //---------------------------------------------------------------------------
 
-//ward + sondos //
+// مسار بدء المحادثة
+Route::get('/chalets/{chalet}/chat', [ChatController::class, 'startChat'])->name('chat.start')->middleware('auth');
+
+// مسار إرسال الرسالة
+Route::post('/chats/{chat}/send', [ChatController::class, 'sendMessage'])->name('chat.send')->middleware('auth');
+
+// User routes
+Route::middleware('auth')->group(function() {
+    Route::get('/chat/{chalet}', [ChatController::class, 'startChat'])->name('chat.start');
+    Route::post('/chat/{chat}/send', [ChatController::class, 'sendMessage'])->name('chat.send');
+});
+
+// Owner routes
+Route::middleware(['auth', 'role:owner'])->prefix('owner')->group(function() {
+    Route::get('/chats', [ChatController::class, 'ownerChats'])->name('owner.chats.index');
+    Route::get('/chat/{chat}', [ChatController::class, 'showOwnerChat'])->name('owner.chat.show');
+});
 
 Route::middleware(['role:user'])
 ->group(function () {
@@ -124,7 +140,6 @@ Route::get('/chalets/{chaletId}', [StoreController::class, 'showChalet'])->name(
 
 });
 //---------------------------------------------------------------------------
-// raghad //
 
 Route::get('/', function () {
     return view('auth.login_reg');
@@ -165,9 +180,6 @@ Route::get('/home#chalets', [UserController::class, 'showChalets'])->name('home.
             Route::get('/owner/chalets{id}', [OwnerProfileController::class, 'show'])->name('Owner.show');
             Route::get('/Owner/chalet/{id}/booking', [OwnerProfileController::class, 'showChaletBooking'])->name('Owner.chaletBooking');
         });
-
-//hamzeh&omayma
-
 
 
 Route::prefix('admin')->group(function () {

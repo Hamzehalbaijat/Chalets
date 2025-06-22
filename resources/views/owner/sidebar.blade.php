@@ -3,6 +3,7 @@
     <a href="{{ route('Owner.dashboard') }}"><i class="fas fa-home"></i> Dashboard</a>
     <a href="{{ route('Owner.index') }}"><i class="fas fa-house-user"></i> My Chalets</a>
     <a href="{{ route('Owner.create') }}"><i class="fas fa-house"></i> Add New chalet</a>
+    <a href="{{ route('owner.chats.index') }}"><i class="fas fa-comments"></i> Chat</a>
     <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
         <i class="fas fa-sign-out-alt"></i> Logout
     </a>

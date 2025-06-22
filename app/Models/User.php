@@ -44,10 +44,20 @@ public function index()
 
     return view('your-view-name', compact('totalUsers'));
 
-          // Get the total number of users and owners (excluding admins)
-    // $totalUsersAndOwners = User::whereIn('role', ['user', 'owner'])->count();
-
-    // Pass the data to the view
-    // return view('your-view-name', compact('totalUsersAndOwners'));
 }
+
+public function userChats()
+    {
+        return $this->hasMany(Chat::class, 'user_id');
+    }
+
+    public function ownerChats()
+    {
+        return $this->hasMany(Chat::class, 'owner_id');
+    }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
 }
